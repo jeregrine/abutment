@@ -13,8 +13,51 @@ defmodule Abutment.View do
 
       # Common aliases
       alias Phoenix.Controller.Flash
+      def render("404.json", _dc) do
+        %{
+          errors: [%{
+            status: 404,
+            title: "Resource was not found"
+          }]
+        }
+      end
+    def render("errors.json", %{errors: errors}) do
+      json_errors = Enum.map(errors, fn({key, val}) ->
+        %{
+          status: 400,
+          code: "Validations Failed",
+          title: "#{key} #{val}",
+          path: key
+        }
+      end)
+
+      %{errors: json_errors}
+    end
     end
   end
 
+
   # Functions defined here are available to all other views/templates
+  def base_json_api() do
+    %{
+      meta: %{},
+      links: %{},
+      linked: %{},
+    }
+  end
+
+  def base_resource_json() do
+    %{
+      id: "",
+      type: "",
+      href: "",
+      links: %{}
+    }
+  end
+
+  def base_error() do
+    %{
+      errors: []
+    }
+  end
 end

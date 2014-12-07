@@ -14,4 +14,12 @@ defmodule Abutment.TaskModel do
   validate task,
     title: present()
 
+
+  def cleanup_tags([]), do: []
+  def cleanup_tags(arr) do
+    Enum.map(arr, &String.strip(&1))
+      |> Enum.filter(fn(item) -> 
+          item != "" && String.valid?(item)
+        end)
+  end
 end
