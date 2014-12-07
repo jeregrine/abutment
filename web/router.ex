@@ -12,12 +12,11 @@ defmodule Abutment.Router do
 
   scope "/", Abutment do
     pipe_through :browser # Use the default browser stack
-
     get "/", PageController, :index
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", Abutment do
-  #   pipe_through :api
-  # end
+   scope "/api", Abutment do
+     pipe_through :api
+     resources "tasks", TaskController, only: [:index, :show, :create, :update, :destroy]
+   end
 end

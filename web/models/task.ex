@@ -11,7 +11,7 @@ defmodule Abutment.TaskModel do
   end
 
   # Title is the only requirement for a task. 
-  validate task do
+  validate task,
     title: present()
 
 end
