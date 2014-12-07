@@ -1,8 +1,14 @@
 # Abutment
 
-To start your new Phoenix application:
+## Requirements
 
-1. Install dependencies with `mix deps.get`
-2. Start Phoenix router with `mix phoenix.start`
+- Postgres
+- Elixir Latest
 
-Now you can visit `localhost:4000` from your browser.
+## Setup
+
+1. `mix do deps.get, compile`
+2. `mix ecto.create Abutement.Repo`
+3. `mix ecto.migrate Abutement.Repo`
+4. `mix phoenix.start`
+5. `open localhost:4000`
