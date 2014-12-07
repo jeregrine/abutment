@@ -26,7 +26,8 @@ defmodule Abutment.Mixfile do
      {:phoenix, github: "phoenixframework/phoenix"},
      {:cowboy, "~> 1.0"},
      {:postgrex, ">= 0.0.0"},
-     {:ecto, "~> 0.2.5"}
+     {:ecto, "~> 0.2.5"},
+     {:timex, "~> 0.13.2"}
     ]
   end
 end

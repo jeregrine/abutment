@@ -1,5 +1,6 @@
 defmodule Abutment.TaskModel do
   use Ecto.Model
+  import Ecto.Query
 
   schema "tasks" do
     field :title, :string
@@ -22,4 +23,24 @@ defmodule Abutment.TaskModel do
           item != "" && String.valid?(item)
         end)
   end
+
+  def list(%{"sort" => sort, "include" => _include, "filter" => filter}) do
+    query = from t in Abutment.TaskModel, select: t
+
+    if Dict.size(filter) > 0 do
+      query = from t in query,
+        where: ^filter
+    end
+
+    if Dict.size(sort) > 0 do
+      query = from t in query,
+        order_by: ^sort
+    else
+      query = from t in query,
+        order_by: [asc: t.created_at]
+    end
+
+    query
+  end
+
 end

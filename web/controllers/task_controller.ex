@@ -4,12 +4,19 @@ defmodule Abutment.TaskController do
   alias Abutment.TaskModel
   alias Abutment.Repo
   alias Abutment.Router
+  import Ecto.Query
 
   plug :action
 
   # GET /tasks
-  def index(_conn, _params) do
-
+  def index(conn, params) do
+    params = clean_params(params)
+    query = TaskModel.list(params)
+    query2 = from t in query,
+              limit: params["page_size"],
+              offset: params["page"] * params["page_size"]
+    tasks = Repo.all(query2)
+    render conn, "index.json", params: params, tasks: tasks
   end
 
   # GET /tasks/:id
@@ -45,5 +52,14 @@ defmodule Abutment.TaskController do
 
   # DELETE /tasks/:id
   def destroy(_conn, %{"id": _id}) do
+  end
+
+  defp clean_params(params) do
+   filter = Dict.get(params, "filter", %{}) |> Dict.take(["tags"])
+   include = %{}
+   sort = Dict.get(params, "sort", %{}) |> Dict.take(["created_at", "updated_at", "title"])
+   page = Dict.get(params, "page", "0") |> String.to_integer
+   page_size = Dict.get(params, "page_size", "20") |> String.to_integer
+   %{"filter" => filter, "include" => include, "sort" => sort, "page" => page, "page_size" => page_size}
   end
 end
