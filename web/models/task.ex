@@ -6,6 +6,9 @@ defmodule Abutment.TaskModel do
     field :title, :string
     field :body, :string
     field :tags, {:array, :string}
+    belongs_to :owner, Abutment.UserModel, foriegn_key: :owner_id
+    belongs_to :creator, Abutment.UserModel, foriegn_key: :creator_id
+
 
     field :created_at, :datetime
     field :updated_at, :datetime
@@ -25,7 +28,9 @@ defmodule Abutment.TaskModel do
   end
 
   def list(%{"sort" => sort, "include" => _include, "filter" => filter}) do
-    query = from t in Abutment.TaskModel, select: t
+    query = from t in Abutment.TaskModel, 
+              select: t,
+              preload: [:owner, :creator]
 
     if Dict.size(filter) > 0 do
       query = from t in query,
