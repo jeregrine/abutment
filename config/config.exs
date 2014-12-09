@@ -15,7 +15,7 @@ config :phoenix, Abutment.Router,
 # Session configuration
 config :phoenix, Abutment.Router,
   session: [store: :cookie,
-            key: "_abutment_key"]
+            key: "_abutment"]
 
 # Configures Elixir's Logger
 config :logger, :console,

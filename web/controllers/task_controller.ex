@@ -6,6 +6,7 @@ defmodule Abutment.TaskController do
   alias Abutment.Router
   import Ecto.Query
 
+  plug Abutment.Authenticate
   plug :action
 
   # GET /tasks

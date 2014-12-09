@@ -28,7 +28,7 @@ defmodule Abutment.Mixfile do
      {:postgrex, ">= 0.0.0"},
      {:ecto, "~> 0.2.5"},
      {:timex, "~> 0.13.2"},
-     {:scrypt, github: "ferd/erlpass", tag: "1.0.1", compile: "rebar compile"}
+     {:erlpass, github: "ferd/erlpass", tag: "1.0.1"}
     ]
   end
 end

@@ -1,16 +1,16 @@
 defmodule Abutment.UserController do
   use Phoenix.Controller
 
-  alias Abutment.TaskModel
+  alias Abutment.UserModel
   alias Abutment.Repo
   alias Abutment.Router
-  import Ecto.Query
 
+  plug Abutment.Authenticate when action in [:show, :update, :destroy]
   plug :action
 
-  # GET /tasks/:id
+  # GET /user/:id
   def show(conn, %{"id" => id}) do
-    case Repo.get(UserModel, String.to_integer(id)) do
+    case Repo.get(Abutment.UserModel, String.to_integer(id)) do
      nil -> put_status(conn, :not_found) |> render "404.json"
      user -> render conn, "show.json", user: user
     end
@@ -18,7 +18,7 @@ defmodule Abutment.UserController do
 
   # POST /users
   def create(conn, json=%{"format" => "json"}) do
-    password = Dict.get(json, "password", nil),
+    password = Dict.get(json, "password", nil)
     user = %UserModel{
       name: Dict.get(json, "name", nil),
       email: Dict.get(json, "email", nil),

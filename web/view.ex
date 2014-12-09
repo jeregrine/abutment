@@ -36,7 +36,6 @@ defmodule Abutment.View do
     end
   end
 
-
   # Functions defined here are available to all other views/templates
   def base_json_api() do
     %{
@@ -44,6 +43,19 @@ defmodule Abutment.View do
       links: %{},
       linked: %{},
     }
+  end
+
+  def errors_hash(errors) do
+    json_errors = Enum.map(errors, fn({key, val}) ->
+      %{
+        status: 400,
+        code: "Validations Failed",
+        title: "#{key} #{val}",
+        path: key
+      }
+    end)
+
+    %{errors: json_errors}
   end
 
   def base_resource_json() do
