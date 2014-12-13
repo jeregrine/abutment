@@ -55,6 +55,7 @@ defmodule Abutment.TaskController do
   def destroy(_conn, %{"id": _id}) do
   end
 
+  # TODO Fix the %{} instead of []
   defp clean_params(params) do
    filter = Dict.get(params, "filter", %{}) |> Dict.take(["tags"])
    include = %{}

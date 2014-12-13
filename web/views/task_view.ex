@@ -19,12 +19,12 @@ defmodule Abutment.TaskView do
     }
 
     if Enum.count(tasks) == params["page_size"] do
-      next_page = Abutment.Router.Helpers.task_path(:index, Dict.merge(params, %{page: params["page"] + 1}))
+      next_page = Abutment.Router.Helpers.task_path(:index, Dict.merge(params, %{"page" => params["page"] + 1}))
       meta = Dict.put(meta, :next_page, next_page)
     end
 
     if params["page"] > 0 do
-      previous_page = Abutment.Router.Helpers.task_path(:index, Dict.merge(params, %{page: params["page"] - 1}))
+      previous_page = Abutment.Router.Helpers.task_path(:index, Dict.merge(params, %{"page" => params["page"] - 1}))
       meta = Dict.put(meta, :previous_page, previous_page)
     end
     meta

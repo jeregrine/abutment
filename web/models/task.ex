@@ -28,9 +28,8 @@ defmodule Abutment.TaskModel do
   end
 
   def list(%{"sort" => sort, "include" => _include, "filter" => filter}) do
-    query = from t in Abutment.TaskModel, 
-              select: t,
-              preload: [:owner, :creator]
+    query = from t in __MODULE__, 
+              select: t
 
     if Dict.size(filter) > 0 do
       query = from t in query,
