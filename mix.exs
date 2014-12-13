@@ -23,7 +23,8 @@ defmodule Abutment.Mixfile do
   # Type `mix help deps` for examples and options
   defp deps do
     [
-     {:phoenix, github: "phoenixframework/phoenix"},
+     {:plug, github: "elixir-lang/plug", ref: "7040c89cb4cf1f1c6afdee379e5982a07d77a6c3", override: true},
+     {:phoenix, "~> 0.7.0"},
      {:cowboy, "~> 1.0"},
      {:postgrex, ">= 0.0.0"},
      {:ecto, "~> 0.2.5"},

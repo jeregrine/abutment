@@ -6,16 +6,11 @@
 use Mix.Config
 
 # Configures the router
-config :phoenix, Abutment.Router,
+config :abutment, Abutment.Endpoint,
   url: [host: "localhost"],
   http: [port: System.get_env("PORT")],
   secret_key_base: "UNRyclGSv7V915vhunvAtr8oVMEmfrjV/H2rkmy+QM/01U/yfLusKhypwUh6ExWO0giLmTGQLvYuqB+LuxDrWA==",
   debug_errors: false
-
-# Session configuration
-config :phoenix, Abutment.Router,
-  session: [store: :cookie,
-            key: "_abutment"]
 
 # Configures Elixir's Logger
 config :logger, :console,

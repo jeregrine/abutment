@@ -5,7 +5,7 @@ defmodule Abutment.Repo.Migrations.CreateInitialUser do
     ["""
     CREATE TABLE users(
       id serial primary key,
-      email text,
+      email text UNIQUE,
       name text,
       crypted_password text,
       created_at timestamp DEFAULT current_timestamp,

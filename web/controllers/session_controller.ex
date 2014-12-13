@@ -3,11 +3,14 @@ defmodule Abutment.SessionController do
 
   alias Abutment.UserModel
   alias Abutment.Router
+  alias Abutment.Authenticate
 
+  plug Abutment.Authenticate when action in [:index, :destroy]
   plug :action
 
   # GET /session
-  def index(_conn, _params) do
+  def index(conn, _params) do
+    render "show.json", user: conn.assigns[:current_user]
   end
 
   # POST /users
@@ -18,8 +21,9 @@ defmodule Abutment.SessionController do
     # Find User
     case UserModel.fetch(email) do
      nil -> put_status(conn, 400) |> render "errors.json"
-     user -> case UserModel.password_check(password) do # Check Password
+     user -> case UserModel.password_check(user, password) do # Check Password
        true ->  put_resp_header(conn, "Location", Router.Helpers.session_path(:index))
+                |> Authenticate.login(user)
                 |> put_status(201)
                 |> render "show.json", user: user
        false -> put_status(conn, 400) |> render "errors.json"
@@ -27,24 +31,10 @@ defmodule Abutment.SessionController do
     end
   end
 
-  # DELETE /tasks/:id
-  def destroy(_conn, %{"id": _id}) do
-  end
-
-  def auth_error_resp(conn) do
-    json_errors = [%{
-        status: 401,
-        code: "Not Authenticated",
-        title: "Please create a user session before continuing",
-        links: %{
-          session: Abutment.Router.Helpers.session_path(:index)
-        }
-    }]
-
-    encoder = Application.get_env(:phoenix, :format_encoders)
-              |> Keyword.get(:json, Poison)
-
-
-    Plug.Conn.send_resp(conn, conn.status || 200, "application/json", encoder.encode!(%{errors: json_errors}))
+  # DELETE /tasks
+  def destroy(conn, _params) do
+    user = conn.assigns[:current_user]
+    conn = Authenticate.logout(conn)
+    render conn, "show.json", user: user
   end
 end

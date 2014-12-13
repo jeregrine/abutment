@@ -19,28 +19,55 @@ defmodule Abutment.UserController do
   # POST /users
   def create(conn, json=%{"format" => "json"}) do
     password = Dict.get(json, "password", nil)
-    user = %UserModel{
-      name: Dict.get(json, "name", nil),
-      email: Dict.get(json, "email", nil),
-    }
-    case UserModel.validate(user) |> UserModel.validate_password(password) do
-      [] -> 
-        user = %{user | crypted_password: UserModel.crypt(user.password), password: nil}
-        user = Repo.insert(user)
+    name = Dict.get(json, "name", nil)
+    email = Dict.get(json, "email", nil)
+    case UserModel.create(name, email, password) do
+      {:ok, user} -> 
         conn 
           |> put_resp_header("Location", Router.Helpers.user_path(:show, user.id))
           |> put_status(201)
+          |> Abutment.Authenticate.login(user)
           |> render "show.json", user: user
-      errors ->
+      {:error, errors} ->
         put_status(conn, 400) |> render "errors.json", errors: errors
     end
   end
 
-  # PUT/PATCH /tasks/:id
-  def update(_conn, %{"id": _id}) do
+  # PUT/PATCH /users/:id
+  def update(conn, json=%{"format" => "json"}) do
+    can_change?(conn, Dict.get(json, "id", nil))
+
+    current_user = conn.assigns[:current_user]
+    password = Dict.get(json, "password", nil)
+    email = Dict.get(json, "email", nil)
+    name = Dict.get(json, "name", nil)
+
+    case UserModel.update(current_user, name, email, password) do
+      {:ok, user} ->
+        conn 
+          |> put_status(200)
+          |> render "show.json", user: user
+      {:error, errors} ->
+        put_status(conn, 400) |> render "errors.json", errors: errors
+    end
   end
 
-  # DELETE /tasks/:id
-  def destroy(_conn, %{"id": _id}) do
+  # DELETE /users/:id
+  def destroy(conn, %{"id": id}) do
+    can_change?(conn, id)
+    current_user = conn.assigns[:current_user]
+    Repo.delete(current_user)
+    put_status(conn, 204) |> send_resp
+  end
+
+  defp can_change?(conn, id) when is_binary(id) do
+    can_change?(conn, String.to_integer(id))
+  end
+  defp can_change?(conn, id) do
+    #TODO Define Security Model
+    current_user = conn.assigns[:current_user]
+    if current_user.id != id do
+      put_status(conn, 401) |> render "401.json" |> halt
+    end
   end
 end

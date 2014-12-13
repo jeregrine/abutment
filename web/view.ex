@@ -19,8 +19,18 @@ defmodule Abutment.View do
               status: 404,
               title: "Resource was not found"
             }]
-      }
+        }
       end
+
+      def render("401.json", _dc) do
+        %{
+          errors: [%{
+              status: 401,
+              title: "Not authenticated to interact with this resource"
+            }]
+        }
+      end
+
       def render("errors.json", %{errors: errors}) do
         json_errors = Enum.map(errors, fn({key, val}) ->
           %{

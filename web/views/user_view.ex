@@ -9,7 +9,7 @@ defmodule Abutment.UserView do
     Dict.merge(base_resource_json(), base_user_json(user))
   end
 
-  defp base_user_json(user) do
+  def base_user_json(user) do
     %{
       id: user.id,
       href: Abutment.Router.Helpers.user_path(:show, user.id),

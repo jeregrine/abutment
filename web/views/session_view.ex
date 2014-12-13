@@ -10,6 +10,6 @@ defmodule Abutment.SessionView do
   end
 
   defp base_session_json(user) do
-    Dict.merge(Abutment.UserView, %{ email: user.email })
+    Dict.merge(Abutment.UserView.base_user_json(user), %{ email: user.email })
   end
 end
