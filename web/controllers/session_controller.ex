@@ -10,7 +10,7 @@ defmodule Abutment.SessionController do
 
   # GET /session
   def index(conn, _params) do
-    render "show.json", user: conn.assigns[:current_user]
+    render conn, "show.json", user: conn.assigns[:current_user]
   end
 
   # POST /users
