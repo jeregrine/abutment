@@ -1,4 +1,4 @@
 use Mix.Config
 
-config :phoenix, Abutment.Router,
+config :abutment, Abutment.Endpoint,
   http: [port: System.get_env("PORT") || 4001]

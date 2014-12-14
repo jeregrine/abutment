@@ -6,6 +6,7 @@ defmodule Abutment.TaskController do
   alias Abutment.Router
   import Ecto.Query
 
+  plug Abutment.Authenticate
   plug :action
 
   # GET /tasks
@@ -54,12 +55,14 @@ defmodule Abutment.TaskController do
   def destroy(_conn, %{"id": _id}) do
   end
 
+  # TODO Fix the %{} instead of []
   defp clean_params(params) do
    filter = Dict.get(params, "filter", %{}) |> Dict.take(["tags"])
-   include = %{}
+   include = Dict.get(params, "include", %{}) |> Dict.take([])
    sort = Dict.get(params, "sort", %{}) |> Dict.take(["created_at", "updated_at", "title"])
    page = Dict.get(params, "page", "0") |> String.to_integer
    page_size = Dict.get(params, "page_size", "20") |> String.to_integer
+
    %{"filter" => filter, "include" => include, "sort" => sort, "page" => page, "page_size" => page_size}
   end
 end

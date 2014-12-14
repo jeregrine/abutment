@@ -8,6 +8,7 @@ defmodule Abutment.Router do
 
   pipeline :api do
     plug :accepts, ~w(json)
+    plug :fetch_session
   end
 
   scope "/", Abutment do
@@ -17,6 +18,11 @@ defmodule Abutment.Router do
 
    scope "/api", Abutment do
      pipe_through :api
+     get "/session", SessionController, :index
+     post "/session", SessionController, :create
+     delete "/session", SessionController, :destroy
+
+     resources "users", UserController, only: [:index, :show, :create, :update, :destroy]
      resources "tasks", TaskController, only: [:index, :show, :create, :update, :destroy]
    end
 end
