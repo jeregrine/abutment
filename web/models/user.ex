@@ -7,8 +7,7 @@ defmodule Abutment.UserModel do
     field :email, :string
     field :name, :string
     field :crypted_password, :string
-    has_many :created_tasks, Abutment.TaskModel, foriegn_key: :creator_id
-    has_many :owned_tasks, Abutment.TaskModel, foriegn_key: :owner_id
+    has_many :projects_users, Abutment.ProjectUsers, foriegn_key: :user_id
 
     field :created_at, :datetime
     field :updated_at, :datetime
@@ -73,6 +72,26 @@ defmodule Abutment.UserModel do
     end
   end
 
+  def get(id) do
+    query = from u in __MODULE__,
+      where: u.id == ^id,
+      limit: 1
+    case Abutment.Repo.all(query) do
+      [user] -> {:ok, user}
+      _err -> raise "Two users with the same id"
+    end
+  end
+
+  def fetch(email) do
+    query = from u in __MODULE__,
+      where: downcase(u.email) == downcase(^email),
+      limit: 1
+    case Abutment.Repo.all(query) do
+      [user] -> user
+      _err -> raise "Two users with the same email"
+    end
+  end
+
   def validate_password(errors, password) when is_nil(password) or (is_binary(password) and byte_size(password) == 0) do 
     errors ++ [{:password, "must be set"}]
   end
@@ -91,16 +110,6 @@ defmodule Abutment.UserModel do
     case Abutment.Repo.all(query) do
       [] -> errors
       _users -> errors ++ [{:email, "must be unique"}]
-    end
-  end
-
-  def fetch(email) do
-    query = from u in __MODULE__,
-      where: downcase(u.email) == downcase(^email),
-      limit: 1
-    case Abutment.Repo.all(query) do
-      [user] -> user
-      _err -> raise "Two users with the same email"
     end
   end
 
