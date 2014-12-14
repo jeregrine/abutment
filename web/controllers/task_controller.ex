@@ -16,6 +16,7 @@ defmodule Abutment.TaskController do
     query2 = from t in query,
               limit: params["page_size"],
               offset: params["page"] * params["page_size"]
+
     tasks = Repo.all(query2)
     render conn, "index.json", params: params, tasks: tasks
   end
@@ -29,10 +30,14 @@ defmodule Abutment.TaskController do
   # POST /tasks
   def create(conn, json=%{"format" => "json"}) do
     current_user = conn.assigns[:current_user]
-    title = Dict.get(json, "title", nil)
-    body = Dict.get(json, "body", "")
-    tags = Dict.get(json, "tags", [])
-    owner_id = Dict.get(json, "creator_id", current_user.id)
+    task_json = Dict.get(json, "tasks", %{})
+
+    title = Dict.get(task_json, "title", nil)
+    body = Dict.get(task_json, "body", "")
+    tags = Dict.get(task_json, "tags", [])
+    links = Dict.get(task_json, "links", %{})
+    owner_id = Dict.get(links, "creator_id", current_user.id)
+
     creator_id = current_user.id
 
     case TaskModel.create(title, body, tags, creator_id, owner_id) do
@@ -48,19 +53,20 @@ defmodule Abutment.TaskController do
 
   # PUT/PATCH /tasks/:id
   def update(conn, json=%{"format" => "json"}) do
-    task = fetch(conn, Dict.get(json, "id", nil))
+    task_json = Dict.get(json, "tasks", %{})
+
+    task = fetch(conn, Dict.get(task_json, "id", nil))
     can_change?(conn, task)
 
-    title = Dict.get(json, "title", nil)
-    body =  Dict.get(json, "body", nil)
-    tags =  Dict.get(json, "tags", nil)
-    owner_id = Dict.get(json, "owner_id", nil)
+    title = Dict.get(task_json, "title", nil)
+    body =  Dict.get(task_json, "body", nil)
+    tags =  Dict.get(task_json, "tags", nil)
+    links = Dict.get(task_json, "links", %{})
+    owner_id = Dict.get(links, "creator_id", nil)
 
     case TaskModel.update(task, title, body, tags, owner_id) do
-      :ok ->
-        conn
-          |> put_status(200)
-          |> render "show.json", task: task
+      {:ok, task} ->
+        conn |> put_status(200) |> render "show.json", task: task
       {:error, errors} ->
         put_status(conn, 400) |> render "errors.json", errors: errors
     end

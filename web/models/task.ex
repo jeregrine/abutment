@@ -29,7 +29,13 @@ defmodule Abutment.TaskModel do
     }
 
     case validate(task) do
-      [] -> {:ok, Repo.insert(task)}
+      [] -> 
+        task = Repo.insert(task)
+        query = from t in __MODULE__, where: t.id == ^task.id, preload: [:creator, :owner]
+        case Repo.all(query) do 
+          [task] -> {:ok, task}
+          _ -> raise "Should not get here"
+        end 
       errors -> {:errors, errors}
     end
   end
@@ -55,6 +61,16 @@ defmodule Abutment.TaskModel do
       [] -> 
         task = %{task | updated_at: Ecto.DateTime.utc} 
         Repo.update(task)
+
+        query = from t in Abutment.TaskModel, 
+                  where: t.id == ^task.id,
+                  limit: 1,
+                  preload: [:creator, :owner]
+
+        case Repo.all(query) do
+          [new_task] -> {:ok, new_task}
+          _ -> raise "Got more than one task back on update"
+        end
       errors ->
         {:error, errors}
     end

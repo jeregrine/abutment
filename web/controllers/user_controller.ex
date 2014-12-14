@@ -18,9 +18,11 @@ defmodule Abutment.UserController do
 
   # POST /users
   def create(conn, json=%{"format" => "json"}) do
-    password = Dict.get(json, "password", nil)
-    name = Dict.get(json, "name", nil)
-    email = Dict.get(json, "email", nil)
+    user_json = Dict.get(json, "users", %{})
+
+    password = Dict.get(user_json, "password", nil)
+    name = Dict.get(user_json, "name", nil)
+    email = Dict.get(user_json, "email", nil)
     case UserModel.create(name, email, password) do
       {:ok, user} -> 
         conn 
@@ -35,12 +37,14 @@ defmodule Abutment.UserController do
 
   # PUT/PATCH /users/:id
   def update(conn, json=%{"format" => "json"}) do
-    can_change?(conn, Dict.get(json, "id", nil))
+    user_json = Dict.get(json, "users", %{})
+
+    can_change?(conn, Dict.get(user_json, "id", nil))
 
     current_user = conn.assigns[:current_user]
-    password = Dict.get(json, "password", nil)
-    email = Dict.get(json, "email", nil)
-    name = Dict.get(json, "name", nil)
+    password = Dict.get(user_json, "password", nil)
+    email = Dict.get(user_json, "email", nil)
+    name = Dict.get(user_json, "name", nil)
 
     case UserModel.update(current_user, name, email, password) do
       {:ok, user} ->

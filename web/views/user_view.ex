@@ -1,8 +1,9 @@
 defmodule Abutment.UserView do
   use Abutment.View
+  import Integer, only: [to_string: 2]
 
   def render("show.json", %{user: user}) do
-    Dict.put(base_json_api(), :users, [user_one(user)])
+    Dict.put(base_json_api(), :users, user_one(user))
   end
 
   def user_one(user) do
@@ -11,7 +12,7 @@ defmodule Abutment.UserView do
 
   def base_user_json(user) do
     %{
-      id: user.id,
+      id: to_string(user.id),
       href: Abutment.Router.Helpers.user_path(:show, user.id),
       type: "user",
       name: user.name,

@@ -1,9 +1,10 @@
 defmodule Abutment.TaskView do
   use Abutment.View
   alias Abutment.Router.Helpers
+  import Integer, only: [to_string: 2]
 
   def render("show.json", %{task: task}) do
-    Dict.put(base_json_api(), :tasks, [task_one(task)]) |> add_links([task])
+    Dict.put(base_json_api(), :tasks, task_one(task)) |> add_links([task])
   end
 
   def render("index.json", %{tasks: tasks, params: params}) do
@@ -19,18 +20,17 @@ defmodule Abutment.TaskView do
       page_size: params["page_size"]
     }
 
-  if Enum.count(tasks) == params["page_size"] do
-    next_page = Abutment.Router.Helpers.task_path(:index, Dict.merge(params, %{"page" => params["page"] + 1}))
-    meta = Dict.put(meta, :next_page, next_page)
-  end
+    if Enum.count(tasks) == params["page_size"] do
+      next_page = Abutment.Router.Helpers.task_path(:index, Dict.merge(params, %{"page" => params["page"] + 1}))
+      meta = Dict.put(meta, :next_page, next_page)
+    end
 
-  if params["page"] > 0 do
-    previous_page = Abutment.Router.Helpers.task_path(:index, Dict.merge(params, %{"page" => params["page"] - 1}))
-    meta = Dict.put(meta, :previous_page, previous_page)
+    if params["page"] > 0 do
+      previous_page = Abutment.Router.Helpers.task_path(:index, Dict.merge(params, %{"page" => params["page"] - 1}))
+      meta = Dict.put(meta, :previous_page, previous_page)
+    end
+    meta
   end
-  meta
-  end
-
 
   def task_one(task) do
     Dict.merge(base_resource_json(), base_task_json(task))
@@ -38,7 +38,7 @@ defmodule Abutment.TaskView do
 
   defp base_task_json(task) do
     %{
-      id: task.id,
+      id: to_string(task.id),
       href: Abutment.Router.Helpers.task_path(:show, task.id),
       type: "task",
       title: task.title,
@@ -67,14 +67,16 @@ defmodule Abutment.TaskView do
 
   defp links(task) do
     %{
-      creator: task.creator_id,
-      owner: task.owner_id
+      creator: to_string(task.creator_id),
+      owner: to_string(task.owner_id)
     } 
   end
 
   defp collect_users(tasks) do
-    Enum.map(tasks, fn(task) -> [task.creator.get, task.owner.get] end) 
+    Enum.map(tasks, fn(task) -> 
+      [task.creator.get(), task.owner.get()] 
+    end) 
     |> List.flatten 
-    |> Enum.uniq(fn(user) -> IO.inspect(user); user.id end)
+    |> Enum.uniq(fn(user) -> user.id end)
   end
 end
