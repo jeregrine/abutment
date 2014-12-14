@@ -5,7 +5,7 @@
   "ecto": {:hex, :ecto, "0.2.5"},
   "erlpass": {:git, "git://github.com/ferd/erlpass.git", "7c6b569550620c36ba619da0261134651fab55c2", [tag: "1.0.1"]},
   "phoenix": {:hex, :phoenix, "0.7.2"},
-  "plug": {:git, "git://github.com/elixir-lang/plug.git", "7040c89cb4cf1f1c6afdee379e5982a07d77a6c3", [ref: "7040c89cb4cf1f1c6afdee379e5982a07d77a6c3"]},
+  "plug": {:hex, :plug, "0.9.0"},
   "poison": {:hex, :poison, "1.2.1"},
   "poolboy": {:hex, :poolboy, "1.2.1"},
   "postgrex": {:hex, :postgrex, "0.6.0"},

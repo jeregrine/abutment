@@ -35,6 +35,7 @@ defmodule Abutment.SessionController do
   def destroy(conn, _params) do
     user = conn.assigns[:current_user]
     conn = Authenticate.logout(conn)
-    render conn, "show.json", user: user
+      |> resp(204, "")
+      |> send_resp
   end
 end
