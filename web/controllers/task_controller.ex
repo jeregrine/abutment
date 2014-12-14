@@ -92,9 +92,13 @@ defmodule Abutment.TaskController do
   end
 
   defp fetch(conn, id) do
-    case Repo.get(TaskModel, String.to_integer(id)) do
-      nil -> put_status(conn, :not_found) |> render "404.json"
-      task -> task
+    query = from t in Abutment.TaskModel,
+            where: t.id == ^String.to_integer(id),
+            limit: 1,
+            preload: [:creator, :owner]
+    case Repo.all(query) do
+      [] -> put_status(conn, :not_found) |> render "404.json"
+      [task] -> task
     end
   end
 end

@@ -1,6 +1,7 @@
 defmodule Abutment.UserModel do
   use Ecto.Model
   import Abutment.Validations
+  alias Abutment.Repo
 
   schema "users" do
     field :email, :string
