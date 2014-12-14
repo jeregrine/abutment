@@ -46,7 +46,7 @@ defmodule Abutment.TaskController do
           |> put_resp_header("Location", Router.Helpers.task_path(:show, task.id))
           |> put_status(201)
           |> render "show.json", task: task
-      {:error, errors} ->
+      {:errors, errors} ->
         put_status(conn, 400) |> render "errors.json", errors: errors
     end
   end

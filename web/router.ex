@@ -9,6 +9,7 @@ defmodule Abutment.Router do
   pipeline :api do
     plug :accepts, ~w(json)
     plug :fetch_session
+    plug Abutment.JSONAPIResponse
   end
 
   scope "/", Abutment do
