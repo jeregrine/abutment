@@ -7,7 +7,7 @@ defmodule Abutment.UserModel do
     field :email, :string
     field :name, :string
     field :crypted_password, :string
-    has_many :projects_users, Abutment.ProjectUsers, foriegn_key: :user_id
+    has_many :projects_users, Abutment.ProjectUsers, foreign_key: :user_id
 
     field :created_at, :datetime
     field :updated_at, :datetime

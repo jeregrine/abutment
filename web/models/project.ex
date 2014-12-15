@@ -6,7 +6,7 @@ defmodule Abutment.ProjectModel do
 
   schema "projects" do
     field :name, :string
-    belongs_to :owner, Abutment.UserModel, foriegn_key: :owner_id
+    belongs_to :owner, Abutment.UserModel, foreign_key: :owner_id
     has_many :project_users, ProjectUsers, foreign_key: :project_id
     field :created_at, :datetime
     field :updated_at, :datetime
