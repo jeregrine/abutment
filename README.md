@@ -15,4 +15,4 @@
 
 ### Extras
 
-If you use Postman Client then check this out https://www.getpostman.com/collections/e3ccdfdb44f6a4ea7be4 it should be up to date with all my latest integration test cases.
+https://www.getpostman.com/collections/0ad37b6034355065a435
