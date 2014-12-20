@@ -8,7 +8,7 @@ defmodule Abutment.Repo.Migrations.AddProjects do
       created_at timestamp DEFAULT current_timestamp,
       updated_at timestamp DEFAULT current_timestamp,
       name text,
-      creator_id integer REFERENCES users(id)
+      owner_id integer REFERENCES users(id)
     )
     """,
     """
