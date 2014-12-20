@@ -15,8 +15,9 @@ defmodule Abutment.SessionController do
 
   # POST /sessions
   def create(conn, json=%{"format" => "json"}) do
-    password = Dict.get(json, "password", nil)
-    email = Dict.get(json, "email", nil)
+    session_json = Dict.get(json, "sessions", %{})
+    password = Dict.get(session_json, "password", nil)
+    email = Dict.get(session_json, "email", nil)
 
     # Find User
     case UserModel.fetch(email) do

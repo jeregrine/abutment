@@ -40,6 +40,6 @@ defmodule Abutment.Authenticate do
 
     conn
       |> put_resp_content_type("application/json")
-      |> send_resp(400, encoder.encode!(%{errors: json_errors}))
+      |> send_resp(401, encoder.encode!(%{errors: json_errors}))
   end
 end

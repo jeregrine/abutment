@@ -2,7 +2,7 @@ defmodule Abutment.Endpoint do
   use Phoenix.Endpoint, otp_app: :abutment
 
   plug Plug.Static,
-  at: "/", from: :abutment
+    at: "/", from: :abutment
 
   plug Plug.Logger
 

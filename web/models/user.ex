@@ -27,7 +27,7 @@ defmodule Abutment.UserModel do
   def create(name, email, password) do
     now = Ecto.DateTime.utc
     errors = []
-    user = %__MODULE__{name: name, email: String.downcase(email), 
+    user = %__MODULE__{name: name, email: String.downcase(email),
                        created_at: now, updated_at: now}
 
     if password do
