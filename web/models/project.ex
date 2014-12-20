@@ -20,7 +20,7 @@ defmodule Abutment.ProjectModel do
       name: name,
       owner: owner
     }
-    
+
     case validate(project) do
       [] ->
         project = Repo.insert(project)
