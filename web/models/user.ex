@@ -102,17 +102,6 @@ defmodule Abutment.UserModel do
     errors
   end
 
-  def validate_unique_email(errors, user) do
-    query = from u in __MODULE__,
-      where: downcase(u.email) == downcase(^user.email),
-      limit: 1
-
-    case Abutment.Repo.all(query) do
-      [] -> errors
-      _users -> errors ++ [{:email, "must be unique"}]
-    end
-  end
-
   def crypt(""), do: raise "You cannot encrypt an empty password."
   def crypt(password) do
     :erlpass.hash(password)
