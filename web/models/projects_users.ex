@@ -13,14 +13,14 @@ defmodule Abutment.ProjectUsers do
 
   def remove_user_from_project(user, project) do
     from(p_u in __MODULE__, 
-         where: p_u.user_id == ^user.id && p_u.project_id == ^project.id,
+         where: p_u.user_id == ^user.id and p_u.project_id == ^project.id,
          limit: 1)
       |> Repo.delete_all
   end
 
   def add_user_to_project(user, project, role) do
     query = from p_u in __MODULE__, 
-            where: p_u.user_id == ^user.id && p_u.project_id == ^project.id,
+            where: p_u.user_id == ^user.id and p_u.project_id == ^project.id,
             limit: 1
     case Repo.all(query) do
       [] -> create_project_user(user, project, role)

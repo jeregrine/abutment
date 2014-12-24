@@ -25,10 +25,7 @@ defmodule Abutment.ProjectModel do
       [] ->
         project = Repo.insert(project)
         {:ok, _} = ProjectUsers.add_user_to_project(owner, project, "owner")
-        case Repo.all(get_one(project.id)) do
-          [project] -> {:ok, project}
-          _ -> raise "Project didn't return after being created"
-        end
+        {:ok, project}
       errors -> {:error, errors}
     end
   end
@@ -42,20 +39,20 @@ defmodule Abutment.ProjectModel do
     case validate(project) do
       [] ->
         Repo.update(project)
-        case Repo.all(get_one(project.id)) do
-          [project] -> {:ok, project}
-          _ -> raise "Project didn't return after being created"
-        end
-      errors -> {:error, errors}
+        {:ok, project}
+      errors ->
+        {:error, errors}
     end
   end
 
-  def get_one(project_id) when is_binary(project_id) do
-    String.to_integer(project_id) |> get_one
-  end
-  def get_one(project_id) when is_integer(project_id) do
-    from(p in Abutment.ProjectModel,
-          preload: [:owner, project_users: [:user]],
-          where: p.id == ^project_id)
+  def get(id) do
+    query = from p in __MODULE__,
+      where: p.id == ^id,
+      limit: 1
+    case Abutment.Repo.all(query) do
+      [project] -> {:ok, project}
+      [] -> {}
+      _err -> raise "Two projects with the same id"
+    end
   end
 end
