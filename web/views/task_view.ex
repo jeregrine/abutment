@@ -1,7 +1,6 @@
 defmodule Abutment.TaskView do
   use Abutment.View
   alias Abutment.Router.Helpers
-  import Integer, only: [to_string: 2]
 
   def render("show.json", %{task: task}) do
     Dict.put(base_json_api(), :tasks, task_one(task)) |> add_links([task])

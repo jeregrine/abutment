@@ -8,15 +8,16 @@ defmodule Abutment.SessionController do
   plug Abutment.Authenticate when action in [:index, :destroy]
   plug :action
 
-  # GET /session
+  # GET /sessions
   def index(conn, _params) do
     render conn, "show.json", user: conn.assigns[:current_user]
   end
 
-  # POST /users
+  # POST /sessions
   def create(conn, json=%{"format" => "json"}) do
-    password = Dict.get(json, "password", nil)
-    email = Dict.get(json, "email", nil)
+    session_json = Dict.get(json, "sessions", %{})
+    password = Dict.get(session_json, "password", nil)
+    email = Dict.get(session_json, "email", nil)
 
     # Find User
     case UserModel.fetch(email) do
@@ -31,10 +32,9 @@ defmodule Abutment.SessionController do
     end
   end
 
-  # DELETE /tasks
+  # DELETE /sessions
   def destroy(conn, _params) do
-    user = conn.assigns[:current_user]
-    conn = Authenticate.logout(conn)
+    Authenticate.logout(conn)
       |> resp(204, "")
       |> send_resp
   end

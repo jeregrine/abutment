@@ -4,7 +4,6 @@ defmodule Abutment.Repo do
   @doc "Adapter configuration"
   def conf(env), do: parse_url url(env)
 
-  @doc "The URL to reach the database."
   defp url(:dev) do
     "ecto://localhost/abutment_repo_dev"
   end

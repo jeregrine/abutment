@@ -19,8 +19,8 @@ defmodule Abutment.Repo.Migrations.CreateInitialUser do
   end
 
   def down do
-    ["DROP TABLE users",
-    "ALTER TABLE tasks DROP COLUMN owner_id",
-    "ALTER TABLE tasks DROP COLUMN creator_id"]
+    ["ALTER TABLE tasks DROP COLUMN owner_id",
+    "ALTER TABLE tasks DROP COLUMN creator_id",
+    "DROP TABLE users"]
   end
 end

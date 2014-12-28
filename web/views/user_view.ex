@@ -1,6 +1,5 @@
 defmodule Abutment.UserView do
   use Abutment.View
-  import Integer, only: [to_string: 2]
 
   def render("show.json", %{user: user}) do
     Dict.put(base_json_api(), :users, user_one(user))

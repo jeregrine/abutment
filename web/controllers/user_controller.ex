@@ -61,7 +61,7 @@ defmodule Abutment.UserController do
     can_change?(conn, id)
     current_user = conn.assigns[:current_user]
     Repo.delete(current_user)
-    resp(204, "") |> send_resp
+    resp(conn, 204, "") |> send_resp
   end
 
   defp can_change?(conn, id) when is_binary(id) do

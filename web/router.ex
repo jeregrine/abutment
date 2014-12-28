@@ -19,11 +19,12 @@ defmodule Abutment.Router do
 
    scope "/api", Abutment do
      pipe_through :api
-     get "/session", SessionController, :index
-     post "/session", SessionController, :create
-     delete "/session", SessionController, :destroy
+     get "/sessions", SessionController, :index
+     post "/sessions", SessionController, :create
+     delete "/sessions", SessionController, :destroy
 
-     resources "users", UserController, only: [:index, :show, :create, :update, :destroy]
      resources "tasks", TaskController, only: [:index, :show, :create, :update, :destroy]
+     resources "users", UserController, only: [:index, :show, :create, :update, :destroy]
+     resources "projects", ProjectController, only: [:show, :create, :update, :destroy]
    end
 end

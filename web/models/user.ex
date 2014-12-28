@@ -7,8 +7,7 @@ defmodule Abutment.UserModel do
     field :email, :string
     field :name, :string
     field :crypted_password, :string
-    has_many :created_tasks, Abutment.TaskModel, foriegn_key: :creator_id
-    has_many :owned_tasks, Abutment.TaskModel, foriegn_key: :owner_id
+    has_many :projects_users, Abutment.ProjectUsers, foreign_key: :user_id
 
     field :created_at, :datetime
     field :updated_at, :datetime
@@ -28,7 +27,7 @@ defmodule Abutment.UserModel do
   def create(name, email, password) do
     now = Ecto.DateTime.utc
     errors = []
-    user = %__MODULE__{name: name, email: String.downcase(email), 
+    user = %__MODULE__{name: name, email: String.downcase(email),
                        created_at: now, updated_at: now}
 
     if password do
@@ -73,24 +72,13 @@ defmodule Abutment.UserModel do
     end
   end
 
-  def validate_password(errors, password) when is_nil(password) or (is_binary(password) and byte_size(password) == 0) do 
-    errors ++ [{:password, "must be set"}]
-  end
-  def validate_password(errors, password) when byte_size(password) < 6 do
-    errors ++ [{:password, "must be greater than 6 characters long"}]
-  end
-  def validate_password(errors, _password) do
-    errors
-  end
-
-  def validate_unique_email(errors, user) do
+  def get(id) do
     query = from u in __MODULE__,
-      where: downcase(u.email) == downcase(^user.email),
+      where: u.id == ^id,
       limit: 1
-
     case Abutment.Repo.all(query) do
-      [] -> errors
-      _users -> errors ++ [{:email, "must be unique"}]
+      [user] -> {:ok, user}
+      _err -> raise "Two users with the same id"
     end
   end
 
@@ -102,6 +90,16 @@ defmodule Abutment.UserModel do
       [user] -> user
       _err -> raise "Two users with the same email"
     end
+  end
+
+  def validate_password(errors, password) when is_nil(password) or (is_binary(password) and byte_size(password) == 0) do 
+    errors ++ [{:password, "must be set"}]
+  end
+  def validate_password(errors, password) when byte_size(password) < 6 do
+    errors ++ [{:password, "must be greater than 6 characters long"}]
+  end
+  def validate_password(errors, _password) do
+    errors
   end
 
   def crypt(""), do: raise "You cannot encrypt an empty password."

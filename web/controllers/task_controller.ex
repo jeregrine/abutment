@@ -76,7 +76,7 @@ defmodule Abutment.TaskController do
   def destroy(conn, %{"id" => id}) do
     task = fetch(conn, id)
     Repo.delete(task)
-    resp(204, "") |> send_resp
+    resp(conn, 204, "") |> send_resp
   end
 
   # TODO Fix the %{} instead of []

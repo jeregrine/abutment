@@ -7,9 +7,9 @@ defmodule Abutment.TaskModel do
     field :title, :string
     field :body, :string
     field :tags, {:array, :string}
-    belongs_to :owner, Abutment.UserModel, foriegn_key: :owner_id
-    belongs_to :creator, Abutment.UserModel, foriegn_key: :creator_id
-
+    belongs_to :owner, Abutment.UserModel, foreign_key: :owner_id
+    belongs_to :creator, Abutment.UserModel, foreign_key: :creator_id
+    has_many :projects, Abutment.ProjectModel, foreign_key: :project_id
 
     field :created_at, :datetime
     field :updated_at, :datetime
