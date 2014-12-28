@@ -17,8 +17,8 @@ defmodule Abutment.ProjectController do
               limit: params["page_size"],
               offset: params["page"] * params["page_size"]
 
-    tasks = Repo.all(query2)
-    render conn, "index.json", params: params, tasks: tasks
+    projects = Repo.all(query2)
+    render conn, "index.json", params: params, projects: projects
   end
 
   # GET /projects/:id
@@ -27,13 +27,13 @@ defmodule Abutment.ProjectController do
     render conn, "show.json", project: project
   end
 
-  # POST /tasks
+  # POST /projects
   def create(conn, json=%{"format" => "json"}) do
     current_user = conn.assigns[:current_user]
-    task_json = Dict.get(json, "projects", %{})
+    project_json = Dict.get(json, "projects", %{})
 
-    name = Dict.get(task_json, "name", nil)
-    links = Dict.get(task_json, "links", %{})
+    name = Dict.get(project_json, "name", nil)
+    links = Dict.get(project_json, "links", %{})
 
     owner = current_user
 
